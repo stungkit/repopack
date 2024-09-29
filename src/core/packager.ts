@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import pMap from 'p-map';
+import pc from 'picocolors';
 import type { RepopackConfigMerged } from '../config/configTypes.js';
 import { logger } from '../shared/logger.js';
 import { getProcessConcurrency } from '../shared/processConcurrency.js';
@@ -91,9 +92,9 @@ export const pack = async (
     processedFiles,
     async (file, index) => {
       const charCount = file.content.length;
-      const tokenCount = tokenCounter.countTokens(file.content);
+      const tokenCount = tokenCounter.countTokens(file.content, file.path);
 
-      progressCallback(`Calculating metrics... (${index + 1}/${processedFiles.length})`);
+      progressCallback(`Calculating metrics... (${index + 1}/${processedFiles.length}) ${pc.dim(file.path)}`);
 
       // Sleep for a short time to prevent blocking the event loop
       await sleep(1);
